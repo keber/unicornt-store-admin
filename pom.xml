@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.unicornt.store</groupId>
+    <artifactId>unicornt-store-admin</artifactId>
+    <version>1.0.0</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Sobreescritas por cada perfil -->
+        <db.driver/>
+        <db.url/>
+        <db.user/>
+        <db.password/>
+    </properties>
+
+    <!-- ================================================================
+         Perfiles de BD: usar con  mvn package -P mysql  o  -P postgres
+         Por defecto (sin -P) se activa mysql.
+         ================================================================ -->
+    <!--
+         Variables de entorno requeridas antes de ejecutar mvn package:
+
+         Perfil mysql (default):
+           UNICORNT_MYSQL_URL      jdbc:mysql://host:3306/unicornt_store?useSSL=false&serverTimezone=America/Santiago&characterEncoding=UTF-8&useUnicode=true
+           UNICORNT_MYSQL_ADM_USER     <usuario admin BD>
+           UNICORNT_MYSQL_ADM_PASSWORD <contraseña admin BD>
+
+         Perfil postgres:
+           UNICORNT_POSTGRES_URL           jdbc:postgresql://host:5432/postgres?sslmode=require
+           UNICORNT_POSTGRES_ADM_USER      <usuario admin BD>
+           UNICORNT_POSTGRES_ADM_PASSWORD  <contraseña admin BD>
+    -->
+    <profiles>
+
+        <profile>
+            <id>mysql</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>com.mysql.cj.jdbc.Driver</db.driver>
+                <db.url>${env.UNICORNT_MYSQL_URL}</db.url>
+                <db.user>${env.UNICORNT_MYSQL_ADM_USER}</db.user>
+                <db.password>${env.UNICORNT_MYSQL_ADM_PASSWORD}</db.password>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>com.mysql</groupId>
+                    <artifactId>mysql-connector-j</artifactId>
+                    <version>9.6.0</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>postgres</id>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>${env.UNICORNT_POSTGRES_URL}</db.url>
+                <db.user>${env.UNICORNT_POSTGRES_ADM_USER}</db.user>
+                <db.password>${env.UNICORNT_POSTGRES_ADM_PASSWORD}</db.password>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                    <version>42.7.3</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+    </profiles>
+
+    <dependencies>
+        <!-- Jakarta Servlet API (provided por Tomcat 10.1+) -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Jakarta JSP API (provided por Tomcat 10.1+) -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>3.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JSTL API -->
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+        <!-- JSTL Implementation -->
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>unicornt-store-admin</finalName>
+
+        <resources>
+            <!-- Activa el filtrado de variables ${...} en resources -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
