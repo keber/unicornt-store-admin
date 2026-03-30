@@ -147,8 +147,50 @@
     </table>
 
     <c:if test="${not empty products}">
-        <div class="results-count text-end">
-            ${fn:length(products)} producto<c:if test="${fn:length(products) != 1}">s</c:if> encontrado<c:if test="${fn:length(products) != 1}">s</c:if>
+        <div class="results-count d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span>${totalItems} producto<c:if test="${totalItems != 1}">s</c:if> encontrado<c:if test="${totalItems != 1}">s</c:if></span>
+
+            <c:if test="${totalPages gt 1}">
+                <nav aria-label="Paginación de productos">
+                    <ul class="pagination pagination-sm mb-0">
+                        <%-- Anterior --%>
+                        <li class="page-item<c:if test='${currentPage == 1}'> disabled</c:if>">
+                            <a class="page-link"
+                               href="?search=${searchParam}&amp;categoryId=${categoryFilter != null ? categoryFilter : ''}&amp;page=${currentPage - 1}">&laquo;</a>
+                        </li>
+                        <%-- Primera página + elipsis izquierda --%>
+                        <c:if test="${windowStart gt 1}">
+                            <li class="page-item">
+                                <a class="page-link" href="?search=${searchParam}&amp;categoryId=${categoryFilter != null ? categoryFilter : ''}&amp;page=1">1</a>
+                            </li>
+                            <c:if test="${windowStart gt 2}">
+                                <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                            </c:if>
+                        </c:if>
+                        <%-- Ventana de páginas --%>
+                        <c:forEach begin="${windowStart}" end="${windowEnd}" var="i">
+                            <li class="page-item<c:if test='${i == currentPage}'> active</c:if>">
+                                <a class="page-link"
+                                   href="?search=${searchParam}&amp;categoryId=${categoryFilter != null ? categoryFilter : ''}&amp;page=${i}">${i}</a>
+                            </li>
+                        </c:forEach>
+                        <%-- Elipsis derecha + última página --%>
+                        <c:if test="${windowEnd lt totalPages}">
+                            <c:if test="${windowEnd lt totalPages - 1}">
+                                <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                            </c:if>
+                            <li class="page-item">
+                                <a class="page-link" href="?search=${searchParam}&amp;categoryId=${categoryFilter != null ? categoryFilter : ''}&amp;page=${totalPages}">${totalPages}</a>
+                            </li>
+                        </c:if>
+                        <%-- Siguiente --%>
+                        <li class="page-item<c:if test='${currentPage == totalPages}'> disabled</c:if>">
+                            <a class="page-link"
+                               href="?search=${searchParam}&amp;categoryId=${categoryFilter != null ? categoryFilter : ''}&amp;page=${currentPage + 1}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </c:if>
         </div>
     </c:if>
 </div>

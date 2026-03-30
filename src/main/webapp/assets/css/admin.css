@@ -135,6 +135,25 @@ main { flex: 1; }
     background-color: #faf9ff;
 }
 
+/* Paginador — color activo con paleta brand */
+.results-count .pagination .page-link {
+    color: var(--brand);
+    border-color: #e5e7eb;
+}
+.results-count .pagination .page-item.active .page-link {
+    background-color: var(--brand);
+    border-color:     var(--brand);
+    color: #fff;
+}
+.results-count .pagination .page-link:hover {
+    background-color: var(--brand-light);
+    color: var(--brand-dark);
+    border-color: #d4bbfa;
+}
+.results-count .pagination .page-item.disabled .page-link {
+    color: #c4b5fd;
+}
+
 /* ── Modal de confirmación ───────────────────────────────────── */
 .modal-content {
     border-radius: .75rem;

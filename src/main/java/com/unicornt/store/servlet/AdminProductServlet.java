@@ -31,6 +31,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(urlPatterns = {"/admin/products", "/admin/products/*"})
 public class AdminProductServlet extends HttpServlet {
 
+    private static final int PAGE_SIZE = 10;
+
     private ProductDAO     productDAO;
     private CategoryDAO    categoryDAO;
     private ProductTypeDAO productTypeDAO;
@@ -92,15 +94,31 @@ public class AdminProductServlet extends HttpServlet {
     private void showList(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String  nameFilter    = req.getParameter("search");
+        String  nameFilter     = req.getParameter("search");
         Integer categoryFilter = parseId(req.getParameter("categoryId")) > 0
-                                    ? parseId(req.getParameter("categoryId"))
-                                    : null;
+                                     ? parseId(req.getParameter("categoryId"))
+                                     : null;
 
-        req.setAttribute("products",       productDAO.findAll(nameFilter, categoryFilter));
+        // --- paginación ---
+        int page       = Math.max(1, parseId(req.getParameter("page")));
+        int totalItems = productDAO.countAll(nameFilter, categoryFilter);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalItems / PAGE_SIZE));
+        page = Math.min(page, totalPages); // corrige si page > totalPages
+        int offset     = (page - 1) * PAGE_SIZE;
+
+        // ventana de páginas visibles: currentPage ± 2
+        int windowStart = Math.max(1, page - 2);
+        int windowEnd   = Math.min(totalPages, page + 2);
+
+        req.setAttribute("products",       productDAO.findAll(nameFilter, categoryFilter, PAGE_SIZE, offset));
         req.setAttribute("categories",     categoryDAO.findAll());
         req.setAttribute("searchParam",    nameFilter != null ? nameFilter : "");
         req.setAttribute("categoryFilter", categoryFilter);
+        req.setAttribute("currentPage",    page);
+        req.setAttribute("totalPages",     totalPages);
+        req.setAttribute("totalItems",     totalItems);
+        req.setAttribute("windowStart",    windowStart);
+        req.setAttribute("windowEnd",      windowEnd);
 
         forward(req, resp, "/WEB-INF/views/admin/product-list.jsp");
     }

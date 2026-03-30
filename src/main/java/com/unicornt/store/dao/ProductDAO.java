@@ -70,6 +70,79 @@ public class ProductDAO {
         return list;
     }
 
+    /**
+     * Cuenta productos con filtros opcionales (para calcular totalPages).
+     */
+    public int countAll(String nameFilter, Integer categoryId) {
+        List<Object>  params = new ArrayList<>();
+        StringBuilder sql    = new StringBuilder(
+                "SELECT COUNT(*) FROM products p WHERE 1=1");
+
+        if (nameFilter != null && !nameFilter.trim().isEmpty()) {
+            sql.append(" AND p.name LIKE ?");
+            params.add("%" + nameFilter.trim() + "%");
+        }
+        if (categoryId != null && categoryId > 0) {
+            sql.append(" AND p.category_id = ?");
+            params.add(categoryId);
+        }
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al contar productos", e);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Lista productos con filtros opcionales y paginación (LIMIT/OFFSET).
+     */
+    public List<Product> findAll(String nameFilter, Integer categoryId, int limit, int offset) {
+        List<Product> list   = new ArrayList<>();
+        List<Object>  params = new ArrayList<>();
+        StringBuilder sql    = new StringBuilder(BASE_SELECT).append("WHERE 1=1");
+
+        if (nameFilter != null && !nameFilter.trim().isEmpty()) {
+            sql.append(" AND p.name LIKE ?");
+            params.add("%" + nameFilter.trim() + "%");
+        }
+        if (categoryId != null && categoryId > 0) {
+            sql.append(" AND p.category_id = ?");
+            params.add(categoryId);
+        }
+        sql.append(" ORDER BY p.id LIMIT ? OFFSET ?");
+        params.add(limit);
+        params.add(offset);
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRow(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar productos paginados", e);
+        }
+
+        return list;
+    }
+
     /** Busca un producto por su PK. Devuelve null si no existe. */
     public Product findById(int id) {
         String sql = BASE_SELECT + "WHERE p.id = ?";
