@@ -19,16 +19,16 @@
 <div class="d-flex align-items-center mb-4 gap-3">
     <a href="${pageContext.request.contextPath}/admin/products"
        class="btn btn-outline-secondary" title="Volver al listado">
-        <i class="fas fa-arrow-left"></i>
+        <i class="fa-solid fa-arrow-left"></i>
     </a>
-    <h2 class="fw-bold mb-0">
+    <h2 class="fw-bold mb-0 admin-page-title">
         <c:choose>
             <c:when test="${isEdit}">
-                <i class="fas fa-edit me-2" style="color:var(--brand)"></i>${pageTitle}
+                <i class="fa-solid fa-pen me-2"></i>${pageTitle}
                 <small class="text-muted fw-normal fs-6 ms-2">#${product.id}</small>
             </c:when>
             <c:otherwise>
-                <i class="fas fa-plus me-2" style="color:var(--brand)"></i>${pageTitle}
+                <i class="fa-solid fa-plus me-2"></i>${pageTitle}
             </c:otherwise>
         </c:choose>
     </h2>
@@ -37,7 +37,7 @@
 <%-- ---- Errores de validacion ---- --%>
 <c:if test="${not empty errors}">
     <div class="alert alert-danger" role="alert">
-        <strong><i class="fas fa-exclamation-triangle me-1"></i>Corrige los siguientes errores:</strong>
+        <strong><i class="fa-solid fa-triangle-exclamation me-1"></i>Corrige los siguientes errores:</strong>
         <ul class="mb-0 mt-1">
             <c:forEach var="e" items="${errors}">
                 <li><c:out value="${e}"/></li>
@@ -47,7 +47,7 @@
 </c:if>
 
 <%-- ---- Formulario ---- --%>
-<div class="card border-0 shadow-sm">
+<div class="admin-form-card">
     <div class="card-body">
         <form method="post" action="${formAction}" novalidate>
 
@@ -64,11 +64,11 @@
                     </label>
                     <input type="text" id="name" name="name" class="form-control"
                            maxlength="200" required
-                           placeholder="Ej: Polera 'Breaking Prod'"
-                           value="<c:out value='${product.name}'/>">
+                           placeholder="Ej: Polera &lsquo;Breaking Prod&rsquo;"
+                           value="<c:out value='${product.name}'/>"> 
                 </div>
 
-                <%-- Tipo de producto y Categoria --%>
+                <%-- Tipo de producto y Categoría --%>
                 <div class="col-md-6">
                     <label for="productTypeId" class="form-label fw-semibold">
                         Tipo de Producto <span class="text-danger">*</span>
@@ -152,9 +152,9 @@
                 </div>
 
                 <%-- Acciones --%>
-                <div class="col-12 d-flex gap-2 pt-2 border-top mt-2">
+                <div class="col-12 d-flex gap-2 pt-3 border-top mt-1">
                     <button type="submit" class="btn btn-brand">
-                        <i class="fas fa-save me-1"></i>
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
                         <c:choose>
                             <c:when test="${isEdit}">Actualizar Producto</c:when>
                             <c:otherwise>Crear Producto</c:otherwise>
@@ -162,13 +162,4 @@
                     </button>
                     <a href="${pageContext.request.contextPath}/admin/products"
                        class="btn btn-outline-secondary">
-                        <i class="fas fa-times me-1"></i>Cancelar
-                    </a>
-                </div>
-
-            </div><%-- /row --%>
-        </form>
-    </div>
-</div>
-
-<%@ include file="/WEB-INF/views/layout/footer.jsp" %>
+                        <i class="fa-solid fa-xmark me-1"></i>Cancelar
