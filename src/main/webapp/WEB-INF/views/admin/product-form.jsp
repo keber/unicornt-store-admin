@@ -68,65 +68,93 @@
                            value="<c:out value='${product.name}'/>"> 
                 </div>
 
-                <%-- Tipo de producto y Categoría --%>
-                <div class="col-md-6">
-                    <label for="productTypeId" class="form-label fw-semibold">
-                        Tipo de Producto <span class="text-danger">*</span>
-                    </label>
-                    <select id="productTypeId" name="productTypeId" class="form-select" required>
-                        <option value="">— Selecciona un tipo —</option>
-                        <c:forEach var="type" items="${productTypes}">
-                            <option value="${type.id}"
-                                    ${product.productTypeId == type.id ? 'selected' : ''}>
-                                <c:out value="${type.name}"/>
-                            </option>
-                        </c:forEach>
-                    </select>
-                </div>
+                <%-- Columnas: campos (izq) + preview (der) --%>
+                <div class="col-12">
+                    <div class="row g-3">
 
-                <div class="col-md-6">
-                    <label for="categoryId" class="form-label fw-semibold">
-                        Categoría <span class="text-danger">*</span>
-                    </label>
-                    <select id="categoryId" name="categoryId" class="form-select" required>
-                        <option value="">— Selecciona una categoría —</option>
-                        <c:forEach var="cat" items="${categories}">
-                            <option value="${cat.id}"
-                                    ${product.categoryId == cat.id ? 'selected' : ''}>
-                                <c:out value="${cat.name}"/>
-                            </option>
-                        </c:forEach>
-                    </select>
-                </div>
+                        <%-- Columna izquierda: campos --%>
+                        <div class="col-12 col-md-7">
+                            <div class="row g-3">
 
-                <%-- Precio --%>
-                <div class="col-md-4">
-                    <label for="price" class="form-label fw-semibold">
-                        Precio (CLP) <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" id="price" name="price" class="form-control"
-                               min="1" required
-                               placeholder="Ej: 13990"
-                               value="${product.price gt 0 ? product.price : ''}">
-                    </div>
-                    <div class="form-text">Entero, en pesos chilenos (sin decimales).</div>
-                </div>
+                                <%-- Tipo de Producto --%>
+                                <div class="col-12">
+                                    <label for="productTypeId" class="form-label fw-semibold">
+                                        Tipo de Producto <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="productTypeId" name="productTypeId" class="form-select" required>
+                                        <option value="">— Selecciona un tipo —</option>
+                                        <c:forEach var="type" items="${productTypes}">
+                                            <option value="${type.id}"
+                                                    ${product.productTypeId == type.id ? 'selected' : ''}>
+                                                <c:out value="${type.name}"/>
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
 
-                <%-- Ruta de imagen --%>
-                <div class="col-md-8">
-                    <label for="imageBase" class="form-label fw-semibold">
-                        Ruta de imagen base
-                    </label>
-                    <input type="text" id="imageBase" name="imageBase" class="form-control"
-                           placeholder="Ej: assets/img/devops/breaking-prod"
-                           value="<c:out value='${product.imageBase}'/>">
-                    <div class="form-text">
-                        Sin extensi&oacute;n. El frontend agrega
-                        <code>.webp</code>, <code>-card.webp</code> y <code>-thumb.webp</code>.
-                    </div>
-                </div>
+                                <%-- Categoría --%>
+                                <div class="col-12">
+                                    <label for="categoryId" class="form-label fw-semibold">
+                                        Categoría <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="categoryId" name="categoryId" class="form-select" required>
+                                        <option value="">— Selecciona una categoría —</option>
+                                        <c:forEach var="cat" items="${categories}">
+                                            <option value="${cat.id}"
+                                                    ${product.categoryId == cat.id ? 'selected' : ''}>
+                                                <c:out value="${cat.name}"/>
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <%-- Precio --%>
+                                <div class="col-12">
+                                    <label for="price" class="form-label fw-semibold">
+                                        Precio (CLP) <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" id="price" name="price" class="form-control"
+                                               min="1" required
+                                               placeholder="Ej: 13990"
+                                               value="${product.price gt 0 ? product.price : ''}">
+                                    </div>
+                                    <div class="form-text">Entero, en pesos chilenos (sin decimales).</div>
+                                </div>
+
+                                <%-- Ruta de imagen --%>
+                                <div class="col-12">
+                                    <label for="imageBase" class="form-label fw-semibold">
+                                        Ruta de imagen base
+                                    </label>
+                                    <input type="text" id="imageBase" name="imageBase" class="form-control"
+                                           placeholder="Ej: assets/img/devops/breaking-prod"
+                                           value="<c:out value='${product.imageBase}'/>">
+                                    <div class="form-text">
+                                        Sin extensi&oacute;n. El frontend agrega
+                                        <code>.webp</code>, <code>-card.webp</code> y <code>-thumb.webp</code>.
+                                    </div>
+                                </div>
+
+                            </div><%-- /row interna --%>
+                        </div><%-- /col-md-7 --%>
+
+                        <%-- Columna derecha: preview --%>
+                        <div class="col-12 col-md-5 d-flex flex-column">
+                            <label class="form-label fw-semibold">Vista previa</label>
+                            <div class="img-preview-wrap flex-grow-1">
+                                <img id="img-preview" src="" alt="Preview"
+                                     class="img-preview-img" style="display:none">
+                                <div id="img-preview-placeholder" class="img-preview-placeholder">
+                                    <i class="fa-solid fa-image"></i>
+                                    <span>Sin imagen</span>
+                                </div>
+                            </div>
+                        </div><%-- /col-md-5 --%>
+
+                    </div><%-- /row exterior --%>
+                </div><%-- /col-12 --%>
 
                 <%-- Descripcion --%>
                 <div class="col-12">
@@ -163,3 +191,45 @@
                     <a href="${pageContext.request.contextPath}/admin/products"
                        class="btn btn-outline-secondary">
                         <i class="fa-solid fa-xmark me-1"></i>Cancelar
+                    </a>
+                </div>
+
+            </div><%-- /row --%>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const STORE = 'https://unicornt-store.keber.cl/';
+        const input       = document.getElementById('imageBase');
+        const img         = document.getElementById('img-preview');
+        const placeholder = document.getElementById('img-preview-placeholder');
+        let debounce;
+
+        function showPlaceholder() {
+            img.style.display         = 'none';
+            placeholder.style.display = 'flex';
+        }
+
+        function updatePreview(value) {
+            const trimmed = value.trim();
+            if (!trimmed) { showPlaceholder(); return; }
+            img.src               = STORE + trimmed + '-card.webp';
+            img.style.display     = 'block';
+            placeholder.style.display = 'none';
+        }
+
+        img.addEventListener('error', showPlaceholder);
+
+        input.addEventListener('input', function () {
+            clearTimeout(debounce);
+            debounce = setTimeout(function () { updatePreview(input.value); }, 350);
+        });
+
+        // Carga inicial al editar un producto existente
+        updatePreview(input.value);
+    })();
+</script>
+
+<%@ include file="/WEB-INF/views/layout/footer.jsp" %>

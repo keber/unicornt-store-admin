@@ -81,6 +81,45 @@ main { flex: 1; }
     padding: 2rem;
 }
 
+/* ── Preview de imagen en formulario ────────────────────────── */
+.img-preview-wrap {
+    flex: 1;
+    min-height: 160px;
+    border: 2px dashed rgba(124, 58, 237, .3);
+    border-radius: .75rem;
+    overflow: hidden;
+    background: #faf9ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color .2s;
+}
+
+.img-preview-wrap:has(.img-preview-img[style*="block"]) {
+    border-style: solid;
+    border-color: rgba(124, 58, 237, .2);
+}
+
+.img-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: .25rem;
+}
+
+.img-preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+    color: #c4b5fd;
+    font-size: .75rem;
+}
+
+.img-preview-placeholder i {
+    font-size: 2rem;
+}
+
 /* ── Botones de acción en tabla ──────────────────────────────── */
 .btn-action {
     width: 32px;
